@@ -43,10 +43,10 @@ int main() {
 The profiling results are then printed out like this:
 
 ```txt
-perf_test.c:27 [perf]           41 cycles,     0.000001 ms, "test_function(5.0, 2.23)"
-perf_test.c:31 [perf]           45 cycles,     0.000000 ms, "test_function(1.0, 3.0)"
-perf_test.c:32 [perf]           69 cycles,     0.000003 ms, "custom_name"
-perf_test.c:29 [perf]      5032741 cycles,     0.022399 ms, "profile_perf_calls"
+perf_test.c:27 [perf]           51 cycles,     0.000001 ms, "test_function(5.0, 2.23)"
+perf_test.c:31 [perf]           49 cycles,     0.000000 ms, "test_function(1.0, 3.0)"
+perf_test.c:32 [perf]           82 cycles,     0.000003 ms, "custom_name"
+perf_test.c:29 [perf]      1985457 cycles,     0.707300 ms, "profile_perf_calls"
 ```
 
 ### Disable Performance Profiling

@@ -30,7 +30,7 @@ LICENSE
 #define PERF_API static
 #endif
 
-unsigned long perf_strlen(char *str)
+PERF_API PERF_INLINE unsigned long perf_strlen(char *str)
 {
     unsigned long length = 0;
     while (str[length] != '\0')
@@ -38,6 +38,17 @@ unsigned long perf_strlen(char *str)
         length++;
     }
     return length;
+}
+
+PERF_API PERF_INLINE void perf_strcpy(char *dest, const char *src)
+{
+    unsigned long i = 0;
+    while (src[i] != '\0')
+    {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
 }
 
 #ifdef _WIN32
@@ -419,23 +430,53 @@ PERF_API PERF_INLINE void perf_int_to_string(int value, char *buffer, unsigned l
     buffer[i] = '\0';
 }
 
+#ifndef PERF_MAX_PRINT_BUFFER
+#define PERF_MAX_PRINT_BUFFER 1024
+#endif
 PERF_API PERF_INLINE void perf_print_result(char *file, int line, unsigned long cycles, double time_ms, char *name)
 {
-    char text_buffer[32];
+    char buffer[PERF_MAX_PRINT_BUFFER];
+    char cycles_str[14];  /* 13 chars + null */
+    char time_ms_str[14]; /* 13 chars + null */
+    char line_str[11];    /* 10 chars + null */
+    unsigned long current_pos = 0;
 
-    perf_platform_print(file);
-    perf_platform_print(":");
-    perf_int_to_string(line, text_buffer, 10);
-    perf_platform_print(text_buffer);
-    perf_platform_print(" [perf] ");
-    perf_ulong_to_string(cycles, text_buffer, 13);
-    perf_platform_print(text_buffer);
-    perf_platform_print(" cycles, ");
-    perf_double_to_string(time_ms, text_buffer, 13, 6);
-    perf_platform_print(text_buffer);
-    perf_platform_print(" ms, \"");
-    perf_platform_print(name);
-    perf_platform_print("\"\n");
+    /* Format numbers with fixed padding into temporary buffers */
+    perf_ulong_to_string(cycles, cycles_str, 13);
+    perf_double_to_string(time_ms, time_ms_str, 13, 6);
+    perf_int_to_string(line, line_str, 10);
+
+    /* Concatenate all strings into the main buffer */
+
+    /* File name and line number */
+    perf_strcpy(buffer + current_pos, file);
+    current_pos += perf_strlen(file);
+    perf_strcpy(buffer + current_pos, ":");
+    current_pos += 1;
+    perf_strcpy(buffer + current_pos, line_str);
+    current_pos += perf_strlen(line_str);
+
+    /* Performance metrics */
+    perf_strcpy(buffer + current_pos, " [perf] ");
+    current_pos += 8;
+    perf_strcpy(buffer + current_pos, cycles_str);
+    current_pos += perf_strlen(cycles_str);
+    perf_strcpy(buffer + current_pos, " cycles, ");
+    current_pos += 9;
+    perf_strcpy(buffer + current_pos, time_ms_str);
+    current_pos += perf_strlen(time_ms_str);
+
+    /* Function name */
+    perf_strcpy(buffer + current_pos, " ms, \"");
+    current_pos += 6;
+    perf_strcpy(buffer + current_pos, name);
+    current_pos += perf_strlen(name);
+
+    /* Newline character */
+    perf_strcpy(buffer + current_pos, "\"\n");
+
+    /* Single print call to the platform API */
+    perf_platform_print(buffer);
 }
 
 #define PERF_PROFILE(func_call) PERF_PROFILE_WITH_NAME(func_call, #func_call)

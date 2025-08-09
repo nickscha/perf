@@ -51,18 +51,10 @@ typedef union LARGE_INTEGER
 
 #define PERF_WIN32_API(r) __declspec(dllimport) r __stdcall
 
-#ifndef QueryPerformanceFrequency
 __declspec(dllimport) int __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency);
-#endif
-#ifndef QueryPerformanceCounter
 __declspec(dllimport) int __stdcall QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);
-#endif
-#ifndef GetStdHandle
 __declspec(dllimport) void *__stdcall GetStdHandle(unsigned long nStdHandle);
-#endif
-#ifndef WriteConsoleA
 __declspec(dllimport) int __stdcall WriteConsoleA(void *hConsoleOutput, void *lpBuffer, unsigned long nNumberOfCharsToWrite, unsigned long *lpNumberOfCharsWritten, void *lpReserved);
-#endif
 
 #endif /* _WINDOWS_ (windows.h) */
 
@@ -116,15 +108,33 @@ PERF_API PERF_INLINE void perf_platform_print(char *str)
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-#include <time.h>
-#include <unistd.h>
-#include <sys/syscall.h>
+
+#ifndef __timespec_defined
+#define __timespec_defined
+struct timespec
+{
+    long tv_sec;  /* seconds */
+    long tv_nsec; /* nanoseconds */
+};
+#endif
+
+#ifndef __clockid_t_defined
+typedef int clockid_t;
+#define __clockid_t_defined
+#endif
+
+#define CLOCK_MONOTONIC 1
+#define SYS_clock_gettime 228 /* On x86_64, check for other architectures */
+#define SYS_write 1           /* On x86_64, check for other architectures */
+#define STDOUT_FILENO 1
+
+extern long syscall(long number, ...);
 
 /* Use CLOCK_MONOTONIC for stable high-resolution timing */
 PERF_API PERF_INLINE double perf_platform_current_time_nanoseconds(void)
 {
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
+    syscall(SYS_clock_gettime, CLOCK_MONOTONIC, &ts);
     return (double)ts.tv_sec * 1000000000.0 + (double)ts.tv_nsec;
 }
 

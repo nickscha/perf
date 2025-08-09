@@ -10,8 +10,8 @@ LICENSE
   See end of file for detailed license information.
 
 */
-#include "test.h"    /* Simple Testing framework */
 #include "../perf.h" /* Performance Profiler     */
+#include "test.h"    /* Simple Testing framework */
 
 void test_function(double a, double b)
 {

@@ -55,10 +55,8 @@ typedef struct test_result
 #ifdef _WIN32
 
 #ifndef _WINDOWS_
-#ifndef GetStdHandle
- __declspec(dllimport) void *__stdcall GetStdHandle(unsigned long nStdHandle);
-#endif
- __declspec(dllimport) int __stdcall SetConsoleTextAttribute(void *hConsoleOutput, unsigned short wAttributes);
+__declspec(dllimport) void *__stdcall GetStdHandle(unsigned long nStdHandle);
+__declspec(dllimport) int __stdcall SetConsoleTextAttribute(void *hConsoleOutput, unsigned short wAttributes);
 #endif
 
 #define COLOR_DEFAULT 7

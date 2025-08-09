@@ -110,9 +110,11 @@ PERF_API PERF_INLINE void perf_platform_print(char *str)
 #endif /* _WIN32 */
 
 #ifdef __linux__
-
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 199309L
+#endif
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
 #endif
 #include <time.h>
 #include <unistd.h>
@@ -160,6 +162,7 @@ PERF_API PERF_INLINE void perf_platform_print(char *str)
 
 #endif /* __APPLE__ */
 
+#if defined(__x86_64__) || defined(__i386__)
 PERF_API PERF_INLINE unsigned long perf_platform_current_cycle_count(void)
 {
     unsigned long low_part = 0;
@@ -167,6 +170,13 @@ PERF_API PERF_INLINE unsigned long perf_platform_current_cycle_count(void)
     __asm __volatile("rdtsc" : "=a"(low_part), "=d"(high_part));
     return ((unsigned long)((double)high_part * 4294967296.0 + (double)low_part));
 }
+#elif defined(__aarch64__) && defined(__APPLE__)
+#include <mach/mach_time.h>
+PERF_API PERF_INLINE unsigned long perf_platform_current_cycle_count(void)
+{
+    return (unsigned long)mach_absolute_time();
+}
+#endif
 
 PERF_API PERF_INLINE void perf_ulong_to_string(unsigned long value, char *buffer, unsigned long max_len)
 {

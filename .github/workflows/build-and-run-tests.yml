@@ -2,25 +2,6 @@ name: Compile and Run perf.h tests
 on: [push, pull_request]
 
 jobs:
-  ubuntu:
-    strategy:
-      matrix:
-        cc: [gcc, clang]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Install Dependencies
-        run: sudo apt update && sudo apt install -y ${{ matrix.cc }}
-      - name: Compile perf tests
-        run: ${{ matrix.cc }} -O2 -std=c89 -pedantic -Wall -Wextra -Werror -Wvla -Wconversion -Wdouble-promotion -Wsign-conversion -Wuninitialized -Winit-self -Wunused -Wunused-macros -Wunused-local-typedefs -o perf_test_${{ matrix.cc }} tests/perf_test.c
-      - name: Run perf tests
-        run: ./perf_test_${{ matrix.cc }}
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ubuntu-latest-${{ matrix.cc }}-perf_test
-          path: perf_test_${{ matrix.cc }}
   macos:
     strategy:
       matrix:

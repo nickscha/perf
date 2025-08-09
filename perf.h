@@ -51,10 +51,18 @@ typedef union LARGE_INTEGER
 
 #define PERF_WIN32_API(r) __declspec(dllimport) r __stdcall
 
+#ifndef QueryPerformanceFrequency
 __declspec(dllimport) int __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency);
+#endif
+#ifndef QueryPerformanceCounter
 __declspec(dllimport) int __stdcall QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);
+#endif
+#ifndef GetStdHandle
 __declspec(dllimport) void *__stdcall GetStdHandle(unsigned long nStdHandle);
+#endif
+#ifndef WriteConsoleA
 __declspec(dllimport) int __stdcall WriteConsoleA(void *hConsoleOutput, void *lpBuffer, unsigned long nNumberOfCharsToWrite, unsigned long *lpNumberOfCharsWritten, void *lpReserved);
+#endif
 
 #endif /* _WINDOWS_ (windows.h) */
 
@@ -103,6 +111,9 @@ PERF_API PERF_INLINE void perf_platform_print(char *str)
 
 #ifdef __linux__
 
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 199309L
+#endif
 #include <time.h>
 #include <unistd.h>
 #include <sys/syscall.h>

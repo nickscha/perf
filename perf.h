@@ -263,7 +263,7 @@ PERF_API PERF_INLINE void perf_int_to_string(int value, char *buffer, unsigned l
 
 PERF_API PERF_INLINE void perf_ulong_to_string(unsigned long value, char *buffer, unsigned long max_len)
 {
-    char temp[32]; /* enough for 64-bit decimal representation */
+    char temp[21]; /* enough for 64-bit decimal representation */
     unsigned long i = 0;
     unsigned long j;
     unsigned long pad_count;
@@ -313,7 +313,7 @@ PERF_API PERF_INLINE void perf_ulong_to_string(unsigned long value, char *buffer
 
 PERF_API PERF_INLINE void perf_double_to_string(double value, char *buffer, unsigned long max_len, int precision)
 {
-    char temp[64]; /* holds the number without padding */
+    char temp[40]; /* holds the number without padding */
     unsigned long temp_index = 0;
     unsigned long j;
     unsigned long pad_count;

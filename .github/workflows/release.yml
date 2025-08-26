@@ -1,0 +1,73 @@
+name: Manual Release of perf.h
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version number for the new release (e.g., v1.0.0)'
+        required: true
+        type: string
+      description:
+        description: 'A brief description or summary of the release notes.'
+        required: false
+        type: string
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest release tag
+        id: get_tag
+        run: |
+          # Use `git describe` to find the most recent tag.
+          # The `|| true` prevents the workflow from failing if no tag exists.
+          latest_tag=$(git describe --tags --abbrev=0 || echo "")
+          echo "latest_tag=$latest_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Get commit logs
+        id: get_commits
+        run: |
+          if [ -z "${{ steps.get_tag.outputs.latest_tag }}" ]; then
+            log_range="HEAD"
+            echo "No previous tag found. All commits will be listed."
+          else
+            log_range="${{ steps.get_tag.outputs.latest_tag }}..HEAD"
+            echo "Listing commits since tag ${{ steps.get_tag.outputs.latest_tag }}"
+          fi
+          
+          commit_log=$(git log --pretty=format:'* %s (%h)' $log_range)
+          
+          # Escape characters to be safe for multiline output
+          commit_log="${commit_log//'%'/'%25'}"
+          commit_log="${commit_log//$'\n'/'%0A'}"
+          commit_log="${commit_log//$'\r'/'%0D'}"
+          
+          echo "commits_body=$commit_log" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          body: |
+            ${{ github.event.inputs.description }}
+
+            ---
+
+            ### **Changes**
+            
+            ${{ steps.get_commits.outputs.commits_body }}
+          draft: false
+          prerelease: false

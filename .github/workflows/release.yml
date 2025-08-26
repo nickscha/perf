@@ -1,4 +1,4 @@
-name: Manual Release of perf.h
+name: Manual Release with Changelog
 
 on:
   workflow_dispatch:
@@ -28,9 +28,7 @@ jobs:
       - name: Get latest release tag
         id: get_tag
         run: |
-          # Use `git describe` to find the most recent tag.
-          # The `|| true` prevents the workflow from failing if no tag exists.
-          latest_tag=$(git describe --tags --abbrev=0 || echo "")
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           echo "latest_tag=$latest_tag" >> "$GITHUB_OUTPUT"
 
       - name: Get commit logs
@@ -46,12 +44,10 @@ jobs:
           
           commit_log=$(git log --pretty=format:'* %s (%h)' $log_range)
           
-          # Escape characters to be safe for multiline output
-          commit_log="${commit_log//'%'/'%25'}"
-          commit_log="${commit_log//$'\n'/'%0A'}"
-          commit_log="${commit_log//$'\r'/'%0D'}"
-          
-          echo "commits_body=$commit_log" >> "$GITHUB_OUTPUT"
+          # The `\n` in the `body` below correctly handles newlines without escaping
+          echo "commits_body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$commit_log" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         id: create_release

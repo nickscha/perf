@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'The version number for the new release (e.g., v1.0.0)'
+        description: 'The version number for the new release (e.g., v0.1)'
         required: true
         type: string
       description:
@@ -44,7 +44,6 @@ jobs:
           
           commit_log=$(git log --pretty=format:'* %s (%h)' $log_range)
           
-          # The `\n` in the `body` below correctly handles newlines without escaping
           echo "commits_body<<EOF" >> "$GITHUB_OUTPUT"
           echo "$commit_log" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
@@ -56,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
+          release_name: ${{ github.event.inputs.version }}: perf.h release
           body: |
             ${{ github.event.inputs.description }}
 

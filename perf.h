@@ -719,6 +719,16 @@ PERF_API PERF_INLINE void perf_stats_store_result(char *file, int line, unsigned
 }
 #endif /* PERF_STATS_ENABLE */
 
+#ifdef PERF_DISBALE_INTERMEDIATE_PRINT
+PERF_API PERF_INLINE void perf_print_result(char *file, int line, unsigned long cycles, double time_ms, char *name)
+{
+    (void)file;
+    (void)line;
+    (void)cycles;
+    (void)time_ms;
+    (void)name;
+}
+#else
 PERF_API PERF_INLINE void perf_print_result(char *file, int line, unsigned long cycles, double time_ms, char *name)
 {
     char buffer[PERF_MAX_PRINT_BUFFER];
@@ -746,6 +756,7 @@ PERF_API PERF_INLINE void perf_print_result(char *file, int line, unsigned long 
 
     perf_platform_print(buffer);
 }
+#endif
 
 #define PERF_PROFILE(func_call) PERF_PROFILE_WITH_NAME(func_call, #func_call)
 

@@ -81,6 +81,14 @@ In your code you can then print the statics like min/max/avg/sum/count cycles an
 perf_print_stats();
 ```
 
+### Disable Intermediate Printing
+If you want to turn of printing perf results for each call you can specify -DPERF_DISBALE_INTERMEDIATE_PRINT or #define it like the following example.
+
+```C
+#define PERF_DISBALE_INTERMEDIATE_PRINT
+#include "perf.h"
+```
+
 ### Disable Performance Profiling
 If you placed the PERF_ calls in your code base but want to switch off the functionality without loosing any performance you can specify -DPERF_DISABLE or #define it like the following example.
 

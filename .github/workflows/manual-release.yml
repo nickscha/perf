@@ -1,4 +1,4 @@
-name: Manual Release with Changelog
+name: Manual Release of perf.h with Changelog
 
 on:
   workflow_dispatch:
@@ -6,10 +6,6 @@ on:
       version:
         description: 'The version number for the new release (e.g., v0.1)'
         required: true
-        type: string
-      description:
-        description: 'A brief description or summary of the release notes.'
-        required: false
         type: string
 
 jobs:
@@ -57,12 +53,23 @@ jobs:
           tag_name: ${{ github.event.inputs.version }}
           release_name: "${{ github.event.inputs.version }}: perf.h release"
           body: |
-            ${{ github.event.inputs.description }}
+            # ${{ github.event.inputs.version }}: perf - Simple Performance Profiler Release.
+
+            A C89 standard compliant, single header, nostdlib (no C Standard Library) simple performance profiler (PERF).
 
             ---
 
             ### **Changes**
             
             ${{ steps.get_commits.outputs.commits_body }}
+
+            ---
+
+            ### What's Included
+
+            This release includes the `perf.h` header file as well as testing and example codes ready to be used.
+
+            **Get started by downloading the source code today!**
+
           draft: false
           prerelease: false

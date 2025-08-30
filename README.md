@@ -73,7 +73,7 @@ If you want to turn on collecting statistics you can specify -DPERF_STATS_ENABLE
 ```C
 #define PERF_STATS_ENABLE           /* Enable statistics collecting                                                       */
 #define PERF_STATS_ENTRIES_MAX 1024 /* Optional: Default 1024, max unique (file+line+function name) combinations to store */
-#define PERF_STATS_NAME_MAX 512     /* Optional: Default  512, max lenght of the function name                            */ 
+#define PERF_STATS_NAME_MAX 512     /* Optional: Default  512, max length of the function name                            */ 
 #include "perf.h"
 ```
 

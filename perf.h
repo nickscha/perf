@@ -622,42 +622,27 @@ PERF_API PERF_INLINE void perf_print_stats(void)
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, ":");
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, line_str);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, " [perf]\n");
-            current_pos = 0;
-            perf_platform_print(buffer);
 
-            buffer[0] = '\0';
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, e->file);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, ":");
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, line_str);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, " [perf] +---------------------------------------+-------------------------------------------------------+\n");
-            current_pos = 0;
-            perf_platform_print(buffer);
 
-            buffer[0] = '\0';
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, e->file);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, ":");
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, line_str);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, " [perf] | cylces                                | time_ms                                               |\n");
-            current_pos = 0;
-            perf_platform_print(buffer);
 
-            buffer[0] = '\0';
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, e->file);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, ":");
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, line_str);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, " [perf] +---------+---------+---------+---------+-------------+-------------+-------------+-------------+\n");
-            current_pos = 0;
-            perf_platform_print(buffer);
 
-            buffer[0] = '\0';
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, e->file);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, ":");
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, line_str);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, " [perf] |     min |     max |     avg |     sum |         min |         max |         avg |         sum |\n");
-            current_pos = 0;
-            perf_platform_print(buffer);
 
-            buffer[0] = '\0';
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, e->file);
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, ":");
             current_pos += perf_append_string(buffer, current_pos, PERF_MAX_PRINT_BUFFER, line_str);

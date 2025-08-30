@@ -10,6 +10,7 @@ LICENSE
   See end of file for detailed license information.
 
 */
+#define PERF_STATS_ENABLE
 #include "../perf.h" /* Performance Profiler     */
 #include "test.h"    /* Simple Testing framework */
 
@@ -24,14 +25,24 @@ void test_function(double a, double b)
 
 int main(void)
 {
-  PERF_PROFILE(test_function(5.0, 2.23));
+  int i;
 
-  PERF_PROFILE_WITH_NAME(
-      {
-        PERF_PROFILE(test_function(1.0, 3.0));
-        PERF_PROFILE_WITH_NAME(test_function(1.0, 3.0), "custom_name");
-      },
-      "profile_perf_calls");
+  for (i = 0; i < 10; i++)
+  {
+    PERF_PROFILE(test_function(5.0, 2.23));
+  }
+
+  for (i = 0; i < 3; i++)
+  {
+    PERF_PROFILE_WITH_NAME(
+        {
+          PERF_PROFILE(test_function(1.0, 3.0));
+          PERF_PROFILE_WITH_NAME(test_function(1.0, 3.0), "custom_name");
+        },
+        "profile_perf_calls");
+  }
+
+  perf_print_stats();
 
   return 0;
 }

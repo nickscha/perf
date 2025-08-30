@@ -11,7 +11,8 @@ For more information please look at the "perf.h" file or take a look at the "exa
 Download or clone perf.h and include it in your project.
 
 ```C
-#include "perf.h" /* Performance Profiler */
+#define PERF_STATS_ENABLE /* Enable aggregated profiling statistics */
+#include "perf.h"         /* Performance Profiler                   */
 
 /* Just an example function that does some operations */
 void test_function(double a, double b)
@@ -36,17 +37,47 @@ int main() {
         },
         "profile_perf_calls");
 
+    /* If PERF_STATS_ENABLE is set you can print the aggregated statistics 
+     * or access the perf_stats_entries & perf_stats_entry_count vars 
+     */
+    perf_print_stats();
+
     return 0;
 }
 ```
 
-The profiling results are then printed out like this:
+The profiling results are then printed out like this (the bottom shows the collected statistic values):
 
 ```txt
 perf_test.c:27 [perf]           51 cycles,     0.000001 ms, "test_function(5.0, 2.23)"
 perf_test.c:31 [perf]           49 cycles,     0.000000 ms, "test_function(1.0, 3.0)"
 perf_test.c:32 [perf]           82 cycles,     0.000003 ms, "custom_name"
 perf_test.c:29 [perf]      1985457 cycles,     0.707300 ms, "profile_perf_calls"
+
+perf_test.c:32 [perf]
+perf_test.c:32 [perf] +---------------------------------------+-------------------------------------------------------+
+perf_test.c:32 [perf] | cylces                                | time_ms                                               |
+perf_test.c:32 [perf] +---------+---------+---------+---------+-------------+-------------+-------------+-------------+
+perf_test.c:32 [perf] |     min |     max |     avg |     sum |         min |         max |         avg |         sum |
+perf_test.c:32 [perf] +---------+---------+---------+---------+-------------+-------------+-------------+-------------+
+perf_test.c:32 [perf] |      43 |      56 |      46 |     460 |      0.0000 |      0.0001 |      0.0000 |      0.0004 |   10 x test_function(5.0, 2.23)
+perf_test.c:39 [perf] |      42 |      48 |      44 |     134 |      0.0000 |      0.0001 |      0.0000 |      0.0001 |    3 x test_function(1.0, 3.0)perf_test.c:40 [perf] |      44 |      44 |      44 |     132 |      0.0000 |      0.0000 |      0.0000 |      0.0000 |    3 x custom_name
+perf_test.c:37 [perf] |  892923 | 1115842 | 1000412 | 3001238 |      0.3181 |      0.3975 |      0.3565 |      1.0695 |    3 x profile_perf_calls     
+perf_test.c:37 [perf] +---------+---------+---------+---------+-------------+-------------+-------------+-------------+
+```
+
+### Enable statistics
+If you want to turn on collecting statistics you can specify -DPERF_STATS_ENABLE or #define it like the following example.
+
+```C
+#define PERF_STATS_ENABLE
+#include "perf.h"
+```
+
+In your code you can then print the statics like min/max/avg/sum/count cycles and time in milliseconds.
+
+```C
+perf_print_stats();
 ```
 
 ### Disable Performance Profiling

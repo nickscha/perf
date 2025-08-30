@@ -61,6 +61,10 @@ PERF_API PERF_INLINE unsigned long perf_append_string(char *dest, unsigned long 
     return i;
 }
 
+/* #############################################################################
+ * # WIN32 PLATFORM
+ * #############################################################################
+ */
 #ifdef _WIN32
 #ifndef _WINDOWS_
 
@@ -122,6 +126,10 @@ PERF_API PERF_INLINE void perf_platform_print(char *str)
 
 #endif /* _WIN32 */
 
+/* #############################################################################
+ * # LINUX/POSIX PLATFORM
+ * #############################################################################
+ */
 #ifdef __linux__
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 199309L
@@ -168,6 +176,10 @@ PERF_API PERF_INLINE void perf_platform_print(char *str)
 
 #endif /* __linux__ */
 
+/* #############################################################################
+ * # APPLE PLATFORM
+ * #############################################################################
+ */
 #ifdef __APPLE__
 
 #include <mach/mach_time.h>
@@ -209,6 +221,10 @@ PERF_API PERF_INLINE unsigned long perf_platform_current_cycle_count(void)
 }
 #endif
 
+/* #############################################################################
+ * # String Utility Functions
+ * #############################################################################
+ */
 PERF_API PERF_INLINE void perf_int_to_string(int value, char *buffer, unsigned long max_len)
 {
     char temp[12]; /* Max 11 chars for a 32-bit int + null */
@@ -416,6 +432,10 @@ PERF_API PERF_INLINE void perf_double_to_string(double value, char *buffer, unsi
     buffer[pad_count + temp_index] = '\0';
 }
 
+/* #############################################################################
+ * # PERF MAIN IMPLEMENTATION
+ * #############################################################################
+ */
 #ifndef PERF_MAX_PRINT_BUFFER
 #define PERF_MAX_PRINT_BUFFER 1024
 #endif

@@ -11,8 +11,8 @@ LICENSE
 
 */
 #define PERF_STATS_ENABLE
-#include "../perf.h" /* Performance Profiler     */
-#include "test.h"    /* Simple Testing framework */
+#include "../perf.h"      /* Performance Profiler     */
+#include "../deps/test.h" /* Simple Testing framework */
 
 void test_function(double a, double b)
 {

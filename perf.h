@@ -18,17 +18,15 @@ LICENSE
 /* Check if using C99 or later (inline is supported) */
 #if __STDC_VERSION__ >= 199901L
 #define PERF_INLINE inline
-#define PERF_API static
 #elif defined(__GNUC__) || defined(__clang__)
 #define PERF_INLINE __inline__
-#define PERF_API static
 #elif defined(_MSC_VER)
 #define PERF_INLINE __inline
-#define PERF_API static
 #else
 #define PERF_INLINE
-#define PERF_API static
 #endif
+
+#define PERF_API static
 
 PERF_API PERF_INLINE unsigned long perf_strlen(char *str)
 {

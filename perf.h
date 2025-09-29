@@ -95,28 +95,26 @@ PERF_API PERF_INLINE double perf_ll_to_double(unsigned long low_part, long high_
 
 PERF_API PERF_INLINE double perf_platform_current_time_nanoseconds(void)
 {
-    static LARGE_INTEGER perf_count_frequency;
+    static double perf_frequencyValue;
     static int perf_count_frequency_initialized = 0;
 
     LARGE_INTEGER counter;
-    double counterValue;
-    double frequencyValue;
 
     if (!perf_count_frequency_initialized)
     {
+        LARGE_INTEGER perf_count_frequency;
         QueryPerformanceFrequency(&perf_count_frequency);
+
+        /* Convert the 64-bit frequency value into a double */
+        perf_frequencyValue = perf_ll_to_double(perf_count_frequency.LowPart, perf_count_frequency.HighPart);
+
         perf_count_frequency_initialized = 1;
     }
 
     QueryPerformanceCounter(&counter);
 
     /* Convert the 64-bit counter value into a double for precision */
-    counterValue = perf_ll_to_double(counter.LowPart, counter.HighPart);
-
-    /* Convert the 64-bit frequency value into a double */
-    frequencyValue = perf_ll_to_double(perf_count_frequency.LowPart, perf_count_frequency.HighPart);
-
-    return (counterValue * 1000000000.0) / frequencyValue;
+    return (perf_ll_to_double(counter.LowPart, counter.HighPart) * 1000000000.0) / perf_frequencyValue;
 }
 
 PERF_API PERF_INLINE void perf_platform_print(char *str)
